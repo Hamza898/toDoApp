@@ -36,7 +36,7 @@ function MainInterface() {
         <div className="h-screen w-screen bg-pink-100 flex items-center justify-center">
           <div className="w-5/6 h-5/6 bg-white shadow-lg rounded-lg flex-col justify-center">
             <div className="m-2 text-xl font-bold shadow-md h-10 p-2 text-amber-800 w-1/6 text-center self-start">
-              ToDo Application
+              To Do Application
             </div>
             <div className="flex flex-row">
               <Select setTaskType={setTaskType} />

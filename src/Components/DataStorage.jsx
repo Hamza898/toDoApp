@@ -4,10 +4,8 @@ function DataStorage({
   allTasks,
   setAllTasks,
   setDoneTasks,
-  setIsEditActive,
-  setEditTitle,
-  setEditDes,
-  setIndexForEdit,
+  handleTaskEdit,
+  selectedTask
 }) {
   // const [indexForEdit, setIndexForEdit] = useState(null);
   const [isChecked, setIsChecked] = useState();
@@ -20,15 +18,7 @@ function DataStorage({
   };
 
   const handleEdit = (index) => {
-    setIsEditActive(true);
-    setIndexForEdit(index);
-
-    const obj = allTasks.find((_, i) => i === index);
-
-    if (obj) {
-      setEditTitle(obj.title);
-      setEditDes(obj.description);
-    }
+    handleTaskEdit(index)
   };
 
   const handleDelete = (index) => {

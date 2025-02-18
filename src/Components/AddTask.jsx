@@ -5,32 +5,28 @@ function AddTask({
   setAllTasks,
   setIsCreateNewActive,
   isEditActive,
-  setIsEditActive,
-  editTitle,
-  editDes,
   taskType,
   allTasks,
   setTaskType,
   indexForEdit,
+  setSelectedTask,
+  selectedTask
 }) {
-  const [title, setTitle] = useState(isEditActive ? editTitle : "");
-  const [description, setDescription] = useState(isEditActive ? editDes : "");
+  const [title, setTitle] = useState(selectedTask.title);
+  const [description, setDescription] = useState(selectedTask.description);
   const [checkList, setCheckList] = useState([]);
 
-  useEffect(() => {
-    if (isEditActive) {
-      setTitle(editTitle);
-      setDescription(editDes);
-    }
-  }, [isEditActive, editTitle, editDes]);
+  const onChangeTitle = (e) => {
+    setSelectedTask(prev => ({...prev, title: e.target.value}))
+  };
 
-  const onChangeTitle = (e) => setTitle(e.target.value);
-  const onChangeDes = (e) => setDescription(e.target.value);
-
+  const onChangeDes = (e) => {
+    setSelectedTask(prev => ({...prev, description: e.target.value}))
+  };
 
   const handleAddTask = () => {
-    console.log(taskType)
-    console.log(checkList.length)
+    // console.log(taskType)
+    // console.log(checkList.length)
     if (taskType === "checklist"&& Checklist.length!==0) {
       if (title === "") {
         setTitle("No Title");
@@ -87,9 +83,7 @@ function AddTask({
     if (setIsCreateNewActive) {
       setIsCreateNewActive(false);
     }
-    if (isEditActive) {
-      setIsEditActive(false);
-    }
+
     setTaskType("description");
   };
 
@@ -100,13 +94,13 @@ function AddTask({
   };
 
   const handleClose = () => {
+
+    setSelectedTask(null)
+    
     if (setIsCreateNewActive) {
       setIsCreateNewActive(false);
     }
     setTaskType("description");
-    if (setIsEditActive) {
-      setIsEditActive(false);
-    }
   };
 
   return (
@@ -114,7 +108,7 @@ function AddTask({
       <div className="w-5/6 h-5/6 p-4 bg-white shadow-lg flex flex-col rounded-lg justify-start">
         <label>Title</label>
         <input
-          value={title}
+          value={selectedTask.title}
           onChange={onChangeTitle}
           className="w-1/2 h-10 p-4 border border-gray-300 rounded-lg"
           type="text"
@@ -127,7 +121,7 @@ function AddTask({
           <>
             <label>Description</label>
             <textarea
-              value={description}
+              value={selectedTask.description}
               onChange={onChangeDes}
               className="w-3/4 h-40 p-4 border border-gray-300 rounded-lg"
               placeholder="Enter your Text here..."

@@ -11,11 +11,7 @@ function MainInterface() {
   const [isCreateNewActive, setIsCreateNewActive] = useState(false);
   const [allTasks, setAllTasks] = useState(dataFromLocalSt);
   const [doneTasks, setDoneTasks] = useState(doneDataFromLocalSt);
-  const [isEditActive, setIsEditActive] = useState(false);
   const [taskType, setTaskType] = useState("description");
-  const [indexForEdit, setIndexForEdit] = useState(null);
-  const [editTitle, setEditTitle] = useState("");
-  const [editDes, setEditDes] = useState("");
 
   useEffect(() => {
     localStorage.setItem("items", JSON.stringify(allTasks));
@@ -30,9 +26,18 @@ function MainInterface() {
     setDoneTasks(newData);
   };
 
+  const [selectedTask, setSelectedTask] = useState(null);
+
+  const handleEdit = (index) => {
+    const obj = allTasks.find((_, i) => i === index);
+    if(obj) setSelectedTask({...obj, index});
+  }
+
+  console.log(selectedTask)
+
   return (
     <>
-      {!isCreateNewActive && !isEditActive && (
+      {!isCreateNewActive && !selectedTask && (
         <div className="h-screen w-screen bg-pink-100 flex items-center justify-center">
           <div className="w-5/6 h-5/6 bg-white shadow-lg rounded-lg flex-col justify-center">
             <div className="m-2 text-xl font-bold shadow-md h-10 p-2 text-amber-800 w-1/6 text-center self-start">
@@ -52,10 +57,10 @@ function MainInterface() {
               <DataStorage
                 allTasks={allTasks}
                 setAllTasks={setAllTasks}
-                setIsEditActive={setIsEditActive}
-                setEditTitle={setEditTitle}
-                setEditDes={setEditDes}
-                setIndexForEdit={setIndexForEdit}
+
+                // // yeh wala
+                handleTaskEdit={handleEdit}
+                selectedTask={selectedTask}
                 setDoneTasks={setDoneTasks}
               />
             </div>
@@ -98,25 +103,26 @@ function MainInterface() {
         <AddTask
           setAllTasks={setAllTasks}
           setIsCreateNewActive={setIsCreateNewActive}
-          setEditTitle={setEditTitle}
-          setEditDes={setEditDes}
           taskType={taskType}
           setTaskType={setTaskType}
           allTasks={allTasks}
+          setSelectedTask={setSelectedTask}
+          selectedTask={selectedTask}
         />
       )}
-      {isEditActive && (
+      {!!selectedTask && (
         <AddTask
           setAllTasks={setAllTasks}
-          isEditActive={isEditActive}
-          setIsEditActive={setIsEditActive}
+          isEditActive={!!selectedTask}
           setIsCreateNewActive={setIsCreateNewActive}
-          editTitle={editTitle}
+          editTitle={selectedTask.title}
           setTaskType={setTaskType}
-          editDes={editDes}
+          editDes={selectedTask.description}
           allTasks={allTasks}
           taskType={taskType}
-          indexForEdit={indexForEdit}
+          indexForEdit={selectedTask.index}
+          setSelectedTask={setSelectedTask}
+          selectedTask={selectedTask}
         />
       )}
     </>

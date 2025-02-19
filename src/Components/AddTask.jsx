@@ -8,77 +8,61 @@ function AddTask({
   taskType,
   allTasks,
   setTaskType,
-  indexForEdit,
   setSelectedTask,
-  selectedTask
+  selectedTask,
+  isCreateNewActive,
 }) {
-  const [title, setTitle] = useState(selectedTask.title);
-  const [description, setDescription] = useState(selectedTask.description);
   const [checkList, setCheckList] = useState([]);
 
   const onChangeTitle = (e) => {
-    setSelectedTask(prev => ({...prev, title: e.target.value}))
+    setSelectedTask((prev) => ({ ...prev, title: e.target.value }));
   };
 
   const onChangeDes = (e) => {
-    setSelectedTask(prev => ({...prev, description: e.target.value}))
+    setSelectedTask((prev) => ({ ...prev, description: e.target.value }));
   };
 
   const handleAddTask = () => {
-    // console.log(taskType)
-    // console.log(checkList.length)
-    if (taskType === "checklist"&& Checklist.length!==0) {
-      if (title === "") {
-        setTitle("No Title");
-      }
+    if (taskType === "checklist" && Checklist.length !== 0) {
       setAllTasks((prev) => [
         ...prev,
-        { isAllChecked: false, taskType, title, checkList },
+        { isAllChecked: false, taskType, title: selectedTask.title, checkList },
       ]);
-      // console.log(`hhhh`, [...allTasks] );
+
     }
 
-    if (taskType==='description') {
+    let taskList = [...allTasks];
 
+    if (!isCreateNewActive) {
+      if (taskType === "description") {
+        const taskToUpdate = taskList[selectedTask.index];
+        taskToUpdate.title = selectedTask.title;
+        taskToUpdate.description = selectedTask.description;
+      }
+    } else {
+      let data = {
+        taskType,
+        title: selectedTask.title,
+      };
 
-      setAllTasks((prev) =>
-        isEditActive
-          ? prev.map((task,i) =>
-              indexForEdit===i
-                ? { taskType, title, description }
-                : task
-            )
-          : [
-              ...prev,
-              { taskType: taskType, title: title, description: description },
-            ]
-            
-      );
+      if (taskType === "description") {
+        data = {
+          ...data,
+          description: selectedTask.description,
+        };
+      } else {
+        data = {
+          ...data,
+          isAllChecked: false,
+          checkList,
+        };
+      }
+
+      taskList.push(data);
     }
-      // setAllTasks((prev) =>
-      //   isEditActive
-      //     ? prev.map((task,i) =>
-      //         i===indexForEdit
-      //           ? <>{ 'taskType':taskType,'title':title,'description':description }
-      //           console.log(task)</>
-      //           : task
-      //       )
-      //     : [
-      //         ...prev,
-      //         { 'taskType':taskType,'title':title,'description':description },
-      //       ]
-      // );
-    // if (isEditActive) {
-    //   const arr = [...allTasks];
-    //   arr[indexForEdit] = {
-    //     'taskType':taskType,'title':title,'description':description
-    //   };
-    //   console.log('reached')
-    //   setAllTasks(arr)
-    // } 
-    // else{ setAllTasks((prev)=>[...prev,{'taskType':taskType,'title':title,'description':description}])}
-   
-    // setTaskType('description')
+
+    setAllTasks(taskList);
+    setSelectedTask(null);
 
     if (setIsCreateNewActive) {
       setIsCreateNewActive(false);
@@ -87,16 +71,10 @@ function AddTask({
     setTaskType("description");
   };
 
-  const handleAddCheckList = () => {
-    setAllTasks((prev) => [...prev, { taskType, title, checkList }]);
-    console.log(allTasks);
-    // setIsCreateNewActive(false)
-  };
 
   const handleClose = () => {
+    setSelectedTask(null);
 
-    setSelectedTask(null)
-    
     if (setIsCreateNewActive) {
       setIsCreateNewActive(false);
     }
@@ -108,7 +86,7 @@ function AddTask({
       <div className="w-5/6 h-5/6 p-4 bg-white shadow-lg flex flex-col rounded-lg justify-start">
         <label>Title</label>
         <input
-          value={selectedTask.title}
+          value={selectedTask?.title}
           onChange={onChangeTitle}
           className="w-1/2 h-10 p-4 border border-gray-300 rounded-lg"
           type="text"
@@ -121,7 +99,7 @@ function AddTask({
           <>
             <label>Description</label>
             <textarea
-              value={selectedTask.description}
+              value={selectedTask?.description}
               onChange={onChangeDes}
               className="w-3/4 h-40 p-4 border border-gray-300 rounded-lg"
               placeholder="Enter your Text here..."

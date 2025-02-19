@@ -21,6 +21,7 @@ function MainInterface() {
   const handleIsVisible = () => {
     setIsCreateNewActive(true);
   };
+
   const handleDeleteDoneTasks = (index) => {
     const newData = doneTasks.filter((__, i) => i !== index);
     setDoneTasks(newData);
@@ -33,11 +34,11 @@ function MainInterface() {
     if(obj) setSelectedTask({...obj, index});
   }
 
-  console.log(selectedTask)
+  console.log(allTasks)
 
   return (
     <>
-      {!isCreateNewActive && !selectedTask && (
+      { (!selectedTask && !isCreateNewActive)  && (
         <div className="h-screen w-screen bg-pink-100 flex items-center justify-center">
           <div className="w-5/6 h-5/6 bg-white shadow-lg rounded-lg flex-col justify-center">
             <div className="m-2 text-xl font-bold shadow-md h-10 p-2 text-amber-800 w-1/6 text-center self-start">
@@ -61,6 +62,7 @@ function MainInterface() {
                 // // yeh wala
                 handleTaskEdit={handleEdit}
                 selectedTask={selectedTask}
+                setSelectedTask={setSelectedTask}
                 setDoneTasks={setDoneTasks}
               />
             </div>
@@ -108,6 +110,7 @@ function MainInterface() {
           allTasks={allTasks}
           setSelectedTask={setSelectedTask}
           selectedTask={selectedTask}
+          isCreateNewActive={isCreateNewActive}
         />
       )}
       {!!selectedTask && (

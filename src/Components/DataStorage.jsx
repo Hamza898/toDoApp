@@ -5,11 +5,9 @@ function DataStorage({
   setAllTasks,
   setDoneTasks,
   handleTaskEdit,
-  selectedTask
+
 }) {
-  // const [indexForEdit, setIndexForEdit] = useState(null);
-  const [isChecked, setIsChecked] = useState();
-  const [divIndex, setDivIndex] = useState();
+
 
   const onDoneHandle = (index) => {
     const newObj = allTasks[index];
@@ -27,8 +25,6 @@ function DataStorage({
   };
 
   const onCheckHandle = (index, taskIndex) => {
-    // console.log(taskIndex, index)
-    // console.log("allTasks: ", allTasks)
 
     const array = [...allTasks];
     const bools = [];
